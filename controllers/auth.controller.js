@@ -1,6 +1,10 @@
 import { User } from "../models/User.js";
 import { generateToken, generateRefreshToken } from "../utils/generateToken.js";
-
+import {
+  sendNotAllowedRequest,
+  sendOK,
+  sendServerError,
+} from "../utils/statusRequest.js";
 
 export const login = async (req, res) => {
   const { email, password } = req.body;
@@ -14,7 +18,7 @@ export const login = async (req, res) => {
     if (!isSamePass) throw { code: 10001 };
     //GENERA TOKEN JWT
     const token = generateToken(user.id);
-    console.log('TOKEN GENERADO: ', token.token);
+    console.log("TOKEN GENERADO: ", token.token);
 
     //GENERA EL REFRESH TOKEN JWT Y LO GUARDA POR COOKIE SEGURA
     generateRefreshToken(user.id, res);
@@ -22,12 +26,14 @@ export const login = async (req, res) => {
     return res.status(201).json({ token });
   } catch (error) {
     if (error.code === 10000)
-      return res.status(401).json({ error: "Usuario no registrado" });
+      return sendNotAllowedRequest(res, "Usuario no registrado");
     if (error.code === 10001)
-      return res.status(401).json({ error: "La pass no coincide" });
-    return res
-      .status(500)
-      .json({ error: "Error del servidor", code: error.code, msg: error.message });
+      return sendNotAllowedRequest(res, "La pass no coincide");
+    return sendServerError(res, {
+      error: "Error del servidor",
+      code: error.code,
+      msg: error.message,
+    });
   }
 };
 
@@ -40,43 +46,53 @@ export const register = async (req, res) => {
     await user.save();
 
     const token = generateToken(user.id);
-    console.log('TOKEN GENERADO: ', token.token);
+    console.log("TOKEN GENERADO: ", token.token);
 
     //GENERA EL REFRESH TOKEN JWT Y LO GUARDA POR COOKIE SEGURA
     generateRefreshToken(user.id, res);
-    return res.json({token});
+    return res.json({ token });
   } catch (error) {
     //alternativa por defecto
     if (error.code === 11000) {
-      return res.status(401).json({ error: "User registered" });
+      return sendNotAllowedRequest(res, "Usuario no registrado");
     } else {
-      return res.status(500).json({ error: "Error del servidor" });
+      return sendServerError(res, {
+        error: "Error del servidor",
+        code: error.code,
+        msg: error.message,
+      });
     }
   }
 };
-
 
 export const refreshToken = async (req, res) => {
   try {
     const token = generateToken(req.uid);
     res.json({ ...token });
   } catch (error) {
-    return res.status(500).json(error.message);
+    return sendServerError(res, {
+      error: "Error del servidor",
+      code: error.code,
+      msg: error.message,
+    });
   }
-}
-
+};
 
 export const logout = (req, res) => {
-  res.clearCookie('refreshToken')
-  res.json({ok: true});
-}
+  res.clearCookie("refreshToken");
+  return sendOK(res, { ok: true });
+};
 
 export const infoUser = async (req, res) => {
   try {
     //Lean devuelve un objeto simple por lo que la busqueda es mas rapida
     const user = await User.findById(req.uid).lean();
-    return res.json({ email: user.email });
+    return sendOK(res, { email: user.email });
   } catch (error) {
-    return res.status(500).json({ error: "Error del servidor" });
+    return sendServerError(res, {
+      error: "Error del servidor",
+      code: error.code,
+      msg: error.message,
+    });
   }
-}
+};

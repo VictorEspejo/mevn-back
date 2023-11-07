@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { sendNotAllowedRequest } from "../utils/statusRequest";
+import { sendNotAllowedRequest } from "../utils/statusRequest.js";
 
 export const requireRefreshToken = async (req, res, next) => {
   const refreshTokenCookie = req.cookies.refreshToken;
