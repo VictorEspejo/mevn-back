@@ -8,9 +8,10 @@ import "dotenv/config";
 //CONECTAMOS MONGODB
 import "./database/connectdb.js";
 
-//RUTA DE AUTENTIFICACION
+// RUTA DE AUTENTIFICACION
 import authRouter from "./routes/auth.route.js";
 
+// RUTAS DE LINKS
 import linkRouter from "./routes/link.route.js";
 
 

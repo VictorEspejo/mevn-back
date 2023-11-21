@@ -1,0 +1,9 @@
+{
+  "badRequest": "Error al recibir el ID",
+  "notFound": "No existe el enlace",
+  "notAllowed": "No está autorizado",
+  "serverError": "Error de servidor",
+  "userNotRegister": "Usuario no registrado",
+  "passwordMismatch": "La contraseña no coincide",
+  "userAlreadyExists": "Usuario ya registrado"
+}
