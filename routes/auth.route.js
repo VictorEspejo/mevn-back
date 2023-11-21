@@ -24,7 +24,7 @@ router.post("/login", bodyLoginValidator, login);
 
 router.get("/refresh", requireRefreshToken, refreshToken);
 
-router.get("logout", logout);
+router.get("/logout", logout);
 
 router.get("/protected", requireToken, infoUser);
 
