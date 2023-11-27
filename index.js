@@ -23,13 +23,16 @@ const app = express();
 //habilita recibir solicitudes en json !IMPORTANTE
 app.use(express.json());
 
+
+//bloquea las solicitudes de fuentes no autorizadas y habilita las credenciales de cookies en el navegador
 app.use(cors({
     origin: function(origin, callback){
         if(whiteList.includes(origin) || process.env.MODE ===  "developer"){
             return callback(null, origin)
         }
         return callback("Error de CORS. Host: ".concat(origin).concat(" no autorizado"));
-    }
+    },
+    credentials: true
 }));
 
 //HABILITA LAS COOKIES
