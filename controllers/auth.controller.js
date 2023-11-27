@@ -54,7 +54,7 @@ export const register = async (req, res) => {
 
     // Generar el token de actualización (refresh token) JWT y guardarlo en una cookie segura
     generateRefreshToken(user.id, res);
-    return res.json({ token });
+    return sendComplete(res, { token });
   } catch (error) {
     if (error.code === 11000) {
       return sendNotAllowedRequest(res, "Usuario ya registrado");
@@ -73,7 +73,7 @@ export const refreshToken = async (req, res) => {
   try {
     // Generar un nuevo token JWT utilizando el id del usuario
     const token = generateToken(req.uid);
-    res.json({ ...token });
+    return sendComplete(res, { token });
   } catch (error) {
     return sendServerError(res, {
       error: "Error del servidor",
