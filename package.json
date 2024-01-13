@@ -6,8 +6,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon index.js",
-    "start": "node index.js",
-    "build": "babel index.js --out-dir dist --copy-files"
+    "start": "node index.js"
   },
   "author": "",
   "license": "ISC",
@@ -24,7 +23,6 @@
     "node-fetch": "^3.3.2"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
     "nodemon": "^3.0.1"
   }
 }
