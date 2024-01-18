@@ -20,7 +20,7 @@ const router = Router();
 router.get("/", requireToken, getLinks);
 router.post("/", requireToken, bodyLinkValidator, createLink);
 //router.get("/:id", requireToken, paramsLinkValidator, getLink);
-router.get("/:nanoLink", requireToken, getNanoLink);
+router.get("/:nanoLink", getNanoLink);
 router.delete("/:id", requireToken, paramsLinkValidator, removeLink);
 router.patch("/:id", requireToken, bodyLinkValidator, updateLink);
 

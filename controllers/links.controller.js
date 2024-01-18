@@ -80,7 +80,8 @@ export const getNanoLink = async (req, res) => {
       return sendNotFoundRequest(res, "No existe el enlace");
     }
 
-    sendOK(res, { url: link.longLink });
+    res.redirect(link.longLink);
+    //sendOK(res, { url: link.longLink });
   } catch (error) {
     if (error.kind === "ObjectId") {
       return sendNotFoundRequest(res, "No existe el enlace");
