@@ -20,8 +20,18 @@ export const getLinks = async (req, res) => {
 
 export const createLink = async (req, res) => {
   try {
-    const { longLink } = req.body;
-    const link = new Link({ longLink, nanoLink: nanoid(6), uid: req.uid });
+    const { longLink, nanoLink } = req.body;
+    let newNanoLink = "";
+    if (nanoLink) {
+      const linkWithNano = await Link.findOne({ nanoLink });
+      if (linkWithNano.validate()) {
+        return sendBadRequest(res, "El nanoLink ya existe");
+      }
+      newNanoLink = nanoLink;
+    } else {
+      newNanoLink = nanoid(6);
+    }
+    const link = new Link({ longLink, nanoLink: newNanoLink, uid: req.uid });
     const newLink = await link.save();
     sendComplete(res, newLink);
   } catch (error) {
@@ -43,7 +53,8 @@ export const getLink = async (req, res) => {
     }
 
     //COMPROBAR QUE EL UID SEA EL DEL USUARIO QUE CONSULTA
-    if(!link.uid.equals(req.uid)) return sendNotAllowedRequest(res, "No está autorizado");
+    if (!link.uid.equals(req.uid))
+      return sendNotAllowedRequest(res, "No está autorizado");
 
     sendOK(res, link);
   } catch (error) {
@@ -55,7 +66,6 @@ export const getLink = async (req, res) => {
   }
 };
 
-
 export const getNanoLink = async (req, res) => {
   try {
     const { nanoLink } = req.params;
@@ -63,13 +73,13 @@ export const getNanoLink = async (req, res) => {
       return sendBadRequest(res, "Error al recibir el nanoLink");
     }
 
-    const link = await Link.findOne({nanoLink});
+    const link = await Link.findOne({ nanoLink });
 
     if (!link) {
       return sendNotFoundRequest(res, "No existe el enlace");
     }
 
-    sendOK(res, { longLink: link.longLink });
+    sendOK(res, { url: link.longLink });
   } catch (error) {
     if (error.kind === "ObjectId") {
       return sendNotFoundRequest(res, "No existe el enlace");
@@ -93,12 +103,13 @@ export const removeLink = async (req, res) => {
     }
 
     //COMPROBAR QUE EL UID SEA EL DEL USUARIO QUE CONSULTA
-    if(!link.uid.equals(req.uid)) return sendNotAllowedRequest(res, "No está autorizado");
+    if (!link.uid.equals(req.uid))
+      return sendNotAllowedRequest(res, "No está autorizado");
 
     //BORRA EL DOCUMENTO DE LA BASE DE DATOS
-   await Link.findOneAndRemove({_id: link.id});
+    await Link.findOneAndRemove({ _id: link.id });
 
-    sendOK(res, {ok: true});
+    sendOK(res, { ok: true });
   } catch (error) {
     if (error.kind === "ObjectId") {
       return sendNotFoundRequest(res, "No existe el enlace");
@@ -106,8 +117,7 @@ export const removeLink = async (req, res) => {
 
     return sendServerError(res, error.message);
   }
-}
-
+};
 
 export const updateLink = async (req, res) => {
   try {
@@ -124,12 +134,13 @@ export const updateLink = async (req, res) => {
     }
 
     //COMPROBAR QUE EL UID SEA EL DEL USUARIO QUE CONSULTA
-    if(!link.uid.equals(req.uid)) return sendNotAllowedRequest(res, "No está autorizado");
+    if (!link.uid.equals(req.uid))
+      return sendNotAllowedRequest(res, "No está autorizado");
 
     //ACTUALIZA EL DOCUMENTO DE LA BASE DE DATOS
-    await link.updateOne({longLink})
+    await link.updateOne({ longLink });
 
-    sendOK(res, {ok: true});
+    sendOK(res, { ok: true });
   } catch (error) {
     if (error.kind === "ObjectId") {
       return sendNotFoundRequest(res, "No existe el enlace");
@@ -137,4 +148,4 @@ export const updateLink = async (req, res) => {
 
     return sendServerError(res, error.message);
   }
-}
+};

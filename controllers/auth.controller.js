@@ -50,7 +50,7 @@ export const register = async (req, res) => {
 
     // Generar un token JWT para el usuario
     const token = generateToken(user.id);
-    console.log("TOKEN GENERADO: ", token.token);
+    //console.log("TOKEN GENERADO: ", token.token);
 
     // Generar el token de actualización (refresh token) JWT y guardarlo en una cookie segura
     generateRefreshToken(user.id, res);

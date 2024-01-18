@@ -14,26 +14,29 @@ import authRouter from "./routes/auth.route.js";
 // RUTAS DE LINKS
 import linkRouter from "./routes/link.route.js";
 
+//HEALTH ROUTE
+import healthRouter from "./routes/health.route.js";
 
-const whiteList = [
-    process.env.ORIGIN1
-]
+const whiteList = [process.env.ORIGIN1];
 
 const app = express();
 //habilita recibir solicitudes en json !IMPORTANTE
 app.use(express.json());
 
-
 //bloquea las solicitudes de fuentes no autorizadas y habilita las credenciales de cookies en el navegador
-app.use(cors({
-    origin: function(origin, callback){
-        if(whiteList.includes(origin) || process.env.MODE ===  "developer"){
-            return callback(null, origin)
-        }
-        return callback("Error de CORS. Host: ".concat(origin).concat(" no autorizado"));
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (whiteList.includes(origin) || process.env.MODE === "developer") {
+        return callback(null, origin);
+      }
+      return callback(
+        "Error de CORS. Host: ".concat(origin).concat(" no autorizado")
+      );
     },
-    credentials: true
-}));
+    credentials: true,
+  })
+);
 
 //HABILITA LAS COOKIES
 app.use(cookieParser());
@@ -44,6 +47,8 @@ const PORT = process.env.PORT || 5000;
 app.use("/api/v1/auth", authRouter);
 
 app.use("/api/v1/links", linkRouter);
+
+app.use("/health", healthRouter);
 
 //INICIAMOS LOS PUERTOS
 app.listen(PORT, () => console.log("PUERTO:", PORT));

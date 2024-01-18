@@ -15,8 +15,8 @@ export const validationResultExpress = (req, res, next) => {
 
 export const paramsLinkValidator = [
   param("id", "Formato no válido").trim().notEmpty().escape(),
-  validationResultExpress
-]
+  validationResultExpress,
+];
 
 export const bodyRegisterValidator = [
   body("email", "Formato de email incorrecto")
@@ -46,15 +46,23 @@ export const bodyLoginValidator = [
   validationResultExpress,
 ];
 
-
 export const bodyLinkValidator = [
-  body("longLink", "Formato link incorrecto").trim().notEmpty().exists().custom( async (value) => {
-    try {
-      await fetch(value);
-      return value;
-    } catch (error) {
-      throw new Error("not found longlink 404");
-    }
-  }),
+  body("longLink", "Formato link incorrecto")
+    .trim()
+    .notEmpty()
+    .exists()
+    .custom(async (value) => {
+      try {
+        await fetch(value);
+        return value;
+      } catch (error) {
+        throw new Error("not found longlink 404");
+      }
+    }),
+  body("nanoLink")
+    .optional()
+    .trim()
+    .notEmpty()
+    .matches(/^[a-zA-Z0-9]+$/),
   validationResultExpress,
 ];
