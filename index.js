@@ -48,7 +48,7 @@ app.use("/api/v1/auth", authRouter);
 
 app.use("/api/v1/links", linkRouter);
 
-app.use("/health", healthRouter);
+app.use("/api/v1/health", healthRouter);
 
 //INICIAMOS LOS PUERTOS
 app.listen(PORT, () => console.log("PUERTO:", PORT));
