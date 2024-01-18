@@ -1,7 +1,17 @@
 import { Router } from "express";
-import { createLink, getLink, getLinks, getNanoLink, removeLink, updateLink } from "../controllers/links.controller.js";
+import {
+  createLink,
+  getLink,
+  getLinks,
+  getNanoLink,
+  removeLink,
+  updateLink,
+} from "../controllers/links.controller.js";
 import { requireToken } from "../middlewares/requireAuth.js";
-import { bodyLinkValidator, paramsLinkValidator } from "../middlewares/validationResultExpress.js";
+import {
+  bodyLinkValidator,
+  paramsLinkValidator,
+} from "../middlewares/validationResultExpress.js";
 
 const router = Router();
 
@@ -10,7 +20,7 @@ const router = Router();
 router.get("/", requireToken, getLinks);
 router.post("/", requireToken, bodyLinkValidator, createLink);
 //router.get("/:id", requireToken, paramsLinkValidator, getLink);
-router.get("/:nanoLink", getNanoLink);
+router.get("/:nanoLink", requireToken, getNanoLink);
 router.delete("/:id", requireToken, paramsLinkValidator, removeLink);
 router.patch("/:id", requireToken, bodyLinkValidator, updateLink);
 

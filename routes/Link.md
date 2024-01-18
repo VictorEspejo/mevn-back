@@ -8,7 +8,7 @@ Gets all links.
 Creates a new link.
 - Middleware: `requireToken`, `bodyLinkValidator`
 - Controller: `createLink`
-- Parameters: `longLink` (Token is taken from cookies)
+- Parameters: `longLink`, `nanoLink`(optional) (Token is taken from cookies)
 
 ## GET /:nanoLink
 Gets a specific link by nanoLink.

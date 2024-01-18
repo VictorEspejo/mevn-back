@@ -23,8 +23,8 @@ export const createLink = async (req, res) => {
     const { longLink, nanoLink } = req.body;
     let newNanoLink = "";
     if (nanoLink) {
-      const linkWithNano = await Link.findOne({ nanoLink });
-      if (linkWithNano.validate()) {
+      const linkWithNano = await Link.findOne({ nanoLink, uid: req.uid });
+      if (linkWithNano) {
         return sendBadRequest(res, "El nanoLink ya existe");
       }
       newNanoLink = nanoLink;
@@ -35,6 +35,7 @@ export const createLink = async (req, res) => {
     const newLink = await link.save();
     sendComplete(res, newLink);
   } catch (error) {
+    console.error(error.message);
     return sendServerError(res, "Error de servidor");
   }
 };
